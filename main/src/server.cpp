@@ -316,7 +316,11 @@ esp_err_t Server::sensor_post_handler(httpd_req_t *req) {
     ttf.get_laser_data(laser_values, laser_timestamps);
 #endif // ENABLE_DISTANCE_SENSOR
     for (int i = 0; i < 6; i++) {
-      cJSON_AddNumberToObject(laser_json, ttf.sensor_names[i], (float)laser_values[i]);
+      float value = (float)laser_values[i];
+      if (!enabled_sensors[i]) {
+        value = 65535;
+      }
+      cJSON_AddNumberToObject(laser_json, ttf.sensor_names[i], value);
       char timestamp_buff[100]; snprintf(timestamp_buff, sizeof(timestamp_buff), "%s_timestamp", ttf.sensor_names[i]);
       cJSON_AddNumberToObject(laser_json, timestamp_buff, (float)laser_timestamps[i]);
     }
@@ -423,7 +427,7 @@ esp_err_t Server::sensor_config_post_handler(httpd_req_t *req) {
 
   ttf.set_interval(json_interval->valueint);
   ttf.set_enabled_sensors(enabled_sensors);
-  
+
   cJSON_Delete(json);
 
   httpd_resp_sendstr(req, "");
