@@ -99,10 +99,7 @@ void Ttf::task() {
       i2c_switch_to_ch(i);
 
       uint16_t buff = sensor[i].readRangeSingleMillimeters();
-      if (buff != 8190)
-        laser_values[i] = buff;
-      else
-        laser_values[i] = 0xFFFF;
+      laser_values[i] = buff;
 
       laser_timestamps[i] = esp_timer_get_time();
 
