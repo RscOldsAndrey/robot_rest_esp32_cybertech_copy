@@ -317,7 +317,7 @@ esp_err_t Server::sensor_post_handler(httpd_req_t *req) {
 #endif // ENABLE_DISTANCE_SENSOR
     for (int i = 0; i < 6; i++) {
       float value = (float)laser_values[i];
-      if (!enabled_sensors[i]) {
+      if (!ttf.enabled_sensors[i]) {
         value = 65535;
       }
       cJSON_AddNumberToObject(laser_json, ttf.sensor_names[i], value);
