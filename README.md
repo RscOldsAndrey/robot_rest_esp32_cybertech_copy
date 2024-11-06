@@ -66,6 +66,9 @@
       "left_encoder_delta_sum": 2134,
       "right_encoder_delta_sum": 2100
     }
+    "battery": {
+      "voltage": 8.3212321,
+    }
 }
 ```
 ```json
@@ -109,6 +112,13 @@
   "encoders": {
     "left_encoder_delta_sum": 2134,
     "right_encoder_delta_sum": 2100
+  }
+} 
+```
+```json
+{ // Запрос battery. Текущий заряд батареи. 
+  "battery": {
+    "voltage": 8.3212321,
   }
 } 
 ```
@@ -169,9 +179,14 @@ REST API можно протестировать с помощью curl, при�
 
 ```shell
 curl -X PUT -H "Content-Type: application/json" -d '{"id": "3036393632076C54", "l": 100, "r": -100, "l_time": 2000, "r_time": 4000}' http://192.168.1.179/motor
+
 curl -X POST -H "Content-Type: application/json" -d '{"id": "3036393632076C54", "type": "all"}' http://192.168.1.179/sensor
 curl -X POST -H "Content-Type: application/json" -d '{"id": "3036393632076C54", "type": "laser"}' http://192.168.1.179/sensor
 curl -X POST -H "Content-Type: application/json" -d '{"id": "3036393632076C54", "type": "imu"}' http://192.168.1.179/sensor
+curl -X POST -H "Content-Type: application/json" -d '{"id": "3036393632076C54", "type": "motor"}' http://192.168.1.179/sensor
+curl -X POST -H "Content-Type: application/json" -d '{"id": "3036393632076C54", "type": "encoders"}' http://192.168.1.179/sensor
+curl -X POST -H "Content-Type: application/json" -d '{"id": "3036393632076C54", "type": "battery"}' http://192.168.1.179/sensor
+
 curl -X POST -H "Content-Type: application/json" -d '{"id": "F535AF9628574A53", "interval": 20, "enabled_sensors": ["left", "right", "forward"]}' http://192.168.69.144/sensor_config
 ```
 

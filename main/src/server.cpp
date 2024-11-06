@@ -322,7 +322,7 @@ esp_err_t Server::sensor_post_handler(httpd_req_t *req) {
       }
       cJSON_AddNumberToObject(laser_json, ttf.sensor_names[i], value);
       char timestamp_buff[100]; snprintf(timestamp_buff, sizeof(timestamp_buff), "%s_timestamp", ttf.sensor_names[i]);
-      cJSON_AddNumberToObject(laser_json, timestamp_buff, (float)laser_timestamps[i]);
+      cJSON_AddNumberToObject(laser_json, timestamp_buff, (uint64_t)laser_timestamps[i]);
     }
     cJSON_AddItemToObject(response_json, "laser", laser_json);
   }
@@ -343,13 +343,19 @@ esp_err_t Server::sensor_post_handler(httpd_req_t *req) {
   }
 
   if (strcmp(type, "all") == 0 || strcmp(type, "encoders") == 0) {
-    cJSON *motor_json = cJSON_CreateObject();
-    cJSON_AddNumberToObject(motor_json, "left_encoder_delta_sum", robot.left_encoder_delta_sum);
-    cJSON_AddNumberToObject(motor_json, "right_encoder_delta_sum", robot.right_encoder_delta_sum);
-    cJSON_AddItemToObject(response_json, "encoders", motor_json);
+    cJSON *encoders_json = cJSON_CreateObject();
+    cJSON_AddNumberToObject(encoders_json, "left_encoder_delta_sum", robot.left_encoder_delta_sum);
+    cJSON_AddNumberToObject(encoders_json, "right_encoder_delta_sum", robot.right_encoder_delta_sum);
+    cJSON_AddItemToObject(response_json, "encoders", encoders_json);
 
     robot.left_encoder_delta_sum = 0;
     robot.right_encoder_delta_sum = 0;
+  }
+
+  if (strcmp(type, "all") == 0 || strcmp(type, "battery") == 0) {
+      cJSON* battery_json = cJSON_CreateObject();
+      cJSON_AddNumberToObject(battery_json, "voltage", (float)battery.get_voltage());
+      cJSON_AddItemToObject(response_json, "battery", battery_json);
   }
 
   const char *response_str = cJSON_Print(response_json);
