@@ -65,10 +65,6 @@
     "encoders": {
       "left_encoder_delta_sum": 2134,
       "right_encoder_delta_sum": 2100
-    }
-    "battery": {
-      "voltage": 8.3212321,
-    }
 }
 ```
 ```json
