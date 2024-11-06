@@ -32,19 +32,85 @@
 {"id": "3036393632076C54", "type": "laser"} // Запрос показаний лазерных сенсоров
 {"id": "3036393632076C54", "type": "imu"} // Запрос данных с гироскопа
 {"id": "3036393632076C54", "type": "motor"} // Запрос текущего PWM с каждого из моторов
+{"id": "3036393632076C54", "type": "encoders"} // Запрос сумм дельт энкодеров с момента последнего запроса
 ```
 
 Ответ будет иметь следующий формат:
 
 ```json
-{ 
-	"laser": {"1": 12, "2": 12, "3": 12}, 
-	"imu": {"roll": 20, "pitch": 30, "yaw": 40},
-    "motor": {"left_pwm": 20, "right_pwm": -30},
-} // Запрос all.
-{"laser": {"left": 12, "left45": 17, "forward": 20, "right45": 100, "right": 100, "backward": 100}} // Дальномер mm.
-{"imu": {"roll": 20, "pitch": 30, "yaw": 40}} // imu - поворот в пространстве относительно конкретной оси в градусах.
-{"motor": {"left_pwm": 20, "right_pwm": -30}} // PWM который физически выставлен на моторе в данный момент
+{  // Запрос all.
+    "laser": {
+      "left": 12, 
+      "left45": 12,
+      "forward": 12,
+      "right45": 100, 
+      "right": 100, 
+      "backward": 100,
+      "left_timestamp": 12323423567,
+      "left45_timestamp": 12323423213,
+      "forward_timestamp": 12323423976,
+      "right45_timestamp": 12323423777,
+      "right_timestamp": 12323423324,
+      "backward_timestamp": 12323423253
+    }, 
+    "imu": {
+      "roll": 20,
+      "pitch": 30,
+      "yaw": 40
+    },
+    "motor": {
+      "left_pwm": 20, 
+      "right_pwm": -30
+    },
+    "encoders": {
+      "left_encoder_delta_sum": 2134,
+      "right_encoder_delta_sum": 2100
+    }
+}
+```
+```json
+{ // Запрос laser. mm(расстояние) и ms(момент обновления).
+  "laser": {
+    "left": 12,
+    "left45": 12,
+    "forward": 12,
+    "right45": 100,
+    "right": 100,
+    "backward": 100,
+    "left_timestamp": 12323423567,
+    "left45_timestamp": 12323423213,
+    "forward_timestamp": 12323423976,
+    "right45_timestamp": 12323423777,
+    "right_timestamp": 12323423324,
+    "backward_timestamp": 12323423253
+  }
+}
+```
+```json
+{ // Запрос imu. Поворот в пространстве относительно конкретной оси в градусах.
+  "imu": {
+    "roll": 20,
+    "pitch": 30, 
+    "yaw": 40
+  }
+}
+```
+```json
+{ // Запрос motor. PWM который физически выставлен на моторе в данный момент
+  "motor": {
+    "left_pwm": 20,
+    "right_pwm": -30
+  }
+} 
+```
+```json
+{ // Запрос encoders. Cумма дельт энкодеров с момента последнего запроса. 
+  // P.S. Для конвертации в обороты колеса нужно разделить на MOTOR_RATIO(280)
+  "encoders": {
+    "left_encoder_delta_sum": 2134,
+    "right_encoder_delta_sum": 2100
+  }
+} 
 ```
 
 Все числа в запросах и ответах это целые значения (int).
